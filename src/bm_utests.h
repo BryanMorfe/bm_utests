@@ -10,7 +10,10 @@ export "C" {
 #define SS( str ) #str
 #define S( str ) SS( str )
 
-#define TEST_BEGIN() bool __pass = true
+#define TEST_BEGIN() ({ \
+    bool __pass = true; \
+    setup(); \
+})
     
 #define RUN_TEST(a, b) printf(__FILE__ ":" S(__LINE__) ":" S(a) ":%s\r\n", b ? "PASS" : "FAIL")
     
@@ -35,7 +38,10 @@ __pass = false; \
 printf(__FILE__ ":" S(__LINE__) ":assert failed:%s == %s\r\n", S(a), S(b)); \
 }
     
-#define TEST_END() __pass
+#define TEST_END() ({ \
+    tearDown(); \
+    __pass; \
+)}
     
 #if defined(__cplusplus)
 }
